@@ -33,10 +33,24 @@ public class MainActivity extends AppCompatActivity {
         this.mapController.setZoom(18);
 
         // Centrar mapa en coordenadas torre
-        // this.mapController.setCenter(new GeoPoint(41.403333333333, 2.1894444444444));
+        this.mapController.setCenter(new GeoPoint(41.403333333333, 2.1894444444444));
 
         // Afegir marcadors al mapa
-        // this.creaMarcadorSimple();
+        this.creaMarcadorSimple();
+    }
+
+    private void creaMarcadorSimple() {
+        //plaça Torre Agbar: lat:41.385854118017974, lon:2.1642935848412854
+        // Crear marcador Torre Agbar
+        Marker markerTorreAgbar = new Marker(this.mapa);
+        GeoPoint point = new GeoPoint(41.403333333333, 2.1894444444444);
+        markerTorreAgbar.setPosition(point);
+        markerTorreAgbar.setTitle("Edifici Agbar");
+        markerTorreAgbar.setSubDescription("<p>Situat a la Plaça de les Glòries Catalanes de Barcelona</p><ul><li> Av. Diagonal, 211 </li><li> Barcelona </li></ul>");
+        //markerTorreAgbar.setImage(this.getDrawable(R.drawable.torreagbar));
+
+        //añadir marcador al mapa
+        this.mapa.getOverlays().add(markerTorreAgbar);
     }
 
     public void centrarTorreAgbar(View view) {
