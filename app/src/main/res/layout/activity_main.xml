@@ -7,13 +7,14 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/buttonTorreAgbar"
+        android:id="@+id/buttonUsuari"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="32dp"
-        android:layout_marginBottom="32dp"
-        android:onClick="centrarTorreAgbar"
-        android:text="Torre Agbar"
+        android:layout_marginBottom="44dp"
+        android:onClick="centrarUsuari"
+        android:text="Centrar usuari"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
