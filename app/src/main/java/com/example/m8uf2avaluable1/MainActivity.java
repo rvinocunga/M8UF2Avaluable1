@@ -14,13 +14,31 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity implements LocationListener{
     private MapView mapa;
@@ -30,9 +48,14 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     private double longUsuari;
     private double latUsuari;
 
+    //json
+    private RequestQueue requestQueue;
+    private TextView visor;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.visor = findViewById(R.id.visor);
 
         this.contexto = this.getApplicationContext();
         Configuration.getInstance().load(contexto, PreferenceManager.getDefaultSharedPreferences(contexto));
@@ -92,6 +115,97 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             Toast.makeText(this, "L'aplicació no pot funcionar sense aquest permís.", Toast.LENGTH_LONG).show();
         }
     }
+/*
+    public void but_cargarDatos(View view) {
+        String url = "https://opendata-ajuntament.barcelona.cat/data/dataset";
+        JsonObjectRequest jsonObjectRequest =
+                new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // limpia el visor
+                            visor.setText("");
+
+                            JSONObject data = response.getJSONObject("data");
+                            JSONArray stations = data.getJSONArray("stations");
+
+                            // Mostrar los nombres de las estaciones
+                            for (int i = 0; i < stations.length(); i++) {
+                                JSONObject station = stations.getJSONObject(i);
+                                String name = station.getString("name");
+                                visor.append(name + "\n");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        visor.setText("Error: " + error.getMessage());
+                    }
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> headers = new HashMap<>();
+                        // Agregar tu token al encabezado
+                        headers.put("Authorization", "Bearer 182e680bf6c6f1eb864d25058f907bf8c07c974cd94422bd9d2827ec38c8d8af");
+                        return headers;
+                    }
+                };
+        this.requestQueue.add(jsonObjectRequest);
+    }
+*/
+
+
+public void but_cargarDatos(View view) {
+    try {
+        String url = "https://opendata-ajuntament.barcelona.cat/data/dataset";
+        JsonObjectRequest jsonObjectRequest =
+                new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            // limpia el visor
+                            visor.setText("");
+
+                            JSONObject data = response.getJSONObject("data");
+                            JSONArray stations = data.getJSONArray("stations");
+
+                            // Mostrar los nombres de las estaciones
+                            for (int i = 0; i < stations.length(); i++) {
+                                JSONObject station = stations.getJSONObject(i);
+                                String name = station.getString("name");
+                                visor.append(name + "\n");
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            visor.setText("Error: JSONException");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        visor.setText("Error: " + error.getMessage());
+                    }
+                }) {
+                    @Override
+                    public Map<String, String> getHeaders() {
+                        Map<String, String> headers = new HashMap<>();
+                        // Agregar tu token al encabezado
+                        headers.put("Authorization", "Bearer 182e680bf6c6f1eb864d25058f907bf8c07c974cd94422bd9d2827ec38c8d8af");
+                        return headers;
+                    }
+                };
+        this.requestQueue.add(jsonObjectRequest);
+    } catch (Exception e) {
+        e.printStackTrace();
+        visor.setText("Error: " + e.getMessage());
+    }
+}
+
 
     @Override
     public void onLocationChanged(@NonNull Location location) {

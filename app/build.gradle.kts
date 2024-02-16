@@ -29,8 +29,12 @@ android {
 }
 
 dependencies {
+
     //implementacion osmdroid
     implementation ("org.osmdroid:osmdroid-android:6.1.10")
+
+    // implementacion volley!!! para json
+    implementation ("com.android.volley:volley:1.2.1")
 
     //resto de implementaciones
     implementation("androidx.appcompat:appcompat:1.6.1")
