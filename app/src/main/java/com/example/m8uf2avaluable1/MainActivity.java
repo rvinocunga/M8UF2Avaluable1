@@ -3,6 +3,8 @@ package com.example.m8uf2avaluable1;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -13,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.view.Menu;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,10 +55,13 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
     private RequestQueue requestQueue;
     private TextView visor;
 
+    // lista
+    List<Estacion> elements;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
-        this.visor = findViewById(R.id.visor);
 
         this.contexto = this.getApplicationContext();
         Configuration.getInstance().load(contexto, PreferenceManager.getDefaultSharedPreferences(contexto));
@@ -88,6 +94,12 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
         this.creaMarcadorSimple();
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
     private void creaMarcadorSimple() {
         // Crear marcador Torre Agbar
         Marker markerTorreAgbar = new Marker(this.mapa);
@@ -115,53 +127,11 @@ public class MainActivity extends AppCompatActivity implements LocationListener{
             Toast.makeText(this, "L'aplicació no pot funcionar sense aquest permís.", Toast.LENGTH_LONG).show();
         }
     }
-/*
-    public void but_cargarDatos(View view) {
-        String url = "https://opendata-ajuntament.barcelona.cat/data/dataset";
-        JsonObjectRequest jsonObjectRequest =
-                new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            // limpia el visor
-                            visor.setText("");
-
-                            JSONObject data = response.getJSONObject("data");
-                            JSONArray stations = data.getJSONArray("stations");
-
-                            // Mostrar los nombres de las estaciones
-                            for (int i = 0; i < stations.length(); i++) {
-                                JSONObject station = stations.getJSONObject(i);
-                                String name = station.getString("name");
-                                visor.append(name + "\n");
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        visor.setText("Error: " + error.getMessage());
-                    }
-                }) {
-                    @Override
-                    public Map<String, String> getHeaders() {
-                        Map<String, String> headers = new HashMap<>();
-                        // Agregar tu token al encabezado
-                        headers.put("Authorization", "Bearer 182e680bf6c6f1eb864d25058f907bf8c07c974cd94422bd9d2827ec38c8d8af");
-                        return headers;
-                    }
-                };
-        this.requestQueue.add(jsonObjectRequest);
-    }
-*/
 
 
 public void but_cargarDatos(View view) {
     try {
-        String url = "https://opendata-ajuntament.barcelona.cat/data/dataset";
+        String url = "https://opendata-ajuntament.barcelona.cat/data/dataset/bd2462df-6e1e-4e37-8205-a4b8e7313b84/resource/f60e9291-5aaa-417d-9b91-612a9de800aa/download";
         JsonObjectRequest jsonObjectRequest =
                 new JsonObjectRequest(Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
                     @Override
@@ -205,8 +175,6 @@ public void but_cargarDatos(View view) {
         visor.setText("Error: " + e.getMessage());
     }
 }
-
-
     @Override
     public void onLocationChanged(@NonNull Location location) {
         this.longUsuari = location.getLongitude();
